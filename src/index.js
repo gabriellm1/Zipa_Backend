@@ -9,7 +9,7 @@
  const server = require('http').Server(app);
  const io = require('socket.io')(server);
 
- mongoose.connect('mongodb://localhost/27017',{
+ mongoose.connect('mongodb://localhost/27017/zipa',{
      useNewUrlParser: true,
  })
 
@@ -28,6 +28,6 @@
  app.use(require('./routes'));
 
 
- var porta = process.env.PORT || 8080;
- //server.listen(4444); 
+ //var porta = process.env.PORT || 8080;
+ server.listen(4444); 
  server.listen(porta);

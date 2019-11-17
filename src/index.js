@@ -9,7 +9,7 @@
  const server = require('http').Server(app);
  const io = require('socket.io')(server);
 
- mongoose.connect('mongodb://10.8.0.6:27017/zipa',{
+ mongoose.connect('mongodb://x:27017/zipa',{
      useNewUrlParser: true,
  })
 

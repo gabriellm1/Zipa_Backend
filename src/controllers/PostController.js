@@ -8,6 +8,41 @@ module.exports = {
     async store(req,res) {
         let {user,quantity,coordinate} = req.body;
 
+
+        const post = await Post.create({
+            user,
+            quantity,
+            coordinate,
+        });
+        const marker = {
+            coordinate : post.coordinate,
+            number : post.quantity
+        }
+        req.io.emit('newMarker',marker);
+        return res.json(post);
+        
+
+        
+    },
+
+    async markers(req,res) {
+        const posts = await Post.find().sort('-coordinates');
+        const markers = [];
+        let marker;
+        for(var i=0;i<posts.length;i++){
+            marker = {
+                coordinate : posts[i].coordinate,
+                number : posts[i].quantity
+            }
+            markers.push(marker);
+        }
+        return res.json(markers);
+    },
+
+
+    async alter(req,res) {
+        let {user,quantity,coordinate} = req.body;
+
         const checkExistence = await Post.find( { "coordinate.latitude": { $eq: coordinate.latitude},"coordinate.longitude":{ $eq: coordinate.longitude}  });
 
         if(typeof(checkExistence[0])!="undefined"){
@@ -28,34 +63,20 @@ module.exports = {
             req.io.emit('newMarker',marker);
             return res.json(post);
         } else {
-            const post = await Post.create({
-                user,
-                quantity,
-                coordinate,
-            });
-            const marker = {
-                coordinate : post.coordinate,
-                number : post.quantity
-            }
-            req.io.emit('newMarker',marker);
-            return res.json(post);
+            return res.json({'existence':false});
         }
-
-        
     },
 
-    async markers(req,res) {
-        const posts = await Post.find().sort('-coordinates');
-        const markers = [];
-        let marker;
-        for(var i=0;i<posts.length;i++){
-            marker = {
-                coordinate : posts[i].coordinate,
-                number : posts[i].quantity
-            }
-            markers.push(marker);
+    async remove(req,res) {
+        let {user,coordinate} = req.body
+        const checkExistence = await Post.find( { "coordinate.latitude": { $eq: coordinate.latitude},"coordinate.longitude":{ $eq: coordinate.longitude}  });
+
+        if(typeof(checkExistence[0])!="undefined"){
+            await checkExistence[0].delete()
+            return res.json({'marker':'deleted'});
+        } else {
+            return res.json({'existence':false});
         }
-        return res.json(markers);
     },
 };
 

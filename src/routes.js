@@ -6,8 +6,12 @@ const UserController = require('./controllers/UserController');
 const routes = new express.Router();
 
 routes.get('/', PostController.markers );
-routes.get('/posts', PostController.index ); 
 routes.post('/posts', PostController.store);
+routes.put('/posts', PostController.alter);
+routes.delete('/posts', PostController.remove);
+
+
+routes.get('/posts', PostController.index );
 
 routes.post('/newProd', TokenController.store);
 routes.post('/token', TokenController.validation);

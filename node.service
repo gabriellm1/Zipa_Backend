@@ -1,0 +1,11 @@
+[Unit]
+Description=Node.js WebServer
+[Install]
+WantedBy=multi-user.target
+[Service]
+User=ubuntu
+PermissionsStartOnly=true
+ExecStart=/usr/bin/node /home/ubuntu/Zipa_Backend/src/index.js
+TimeoutSec=600
+Restart=on-failure
+RuntimeDirectoryMode=755
